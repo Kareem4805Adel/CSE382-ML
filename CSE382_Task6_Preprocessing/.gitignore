@@ -1,0 +1,20 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Dataset & fitted binary artifacts (excluded from submission ZIP per project spec)
+data/H2.csv
+artifacts/*.joblib
+artifacts/*.pkl
