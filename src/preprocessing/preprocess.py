@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -5,10 +7,12 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
+SRC_DIR = Path(__file__).resolve().parents[1]
+DATA_PATH = SRC_DIR / "data" / "H2.csv"
 
 def load_and_preprocess_classification():
 
-    df = pd.read_csv('data/H2.csv')
+    df = pd.read_csv(DATA_PATH)
     
     
     target = 'IsCanceled'
@@ -48,7 +52,7 @@ def load_and_preprocess_classification():
 
 
 def load_and_preprocess_clustering():
-    df = pd.read_csv('data/H2.csv')
+    df = pd.read_csv(DATA_PATH)
     df = df.drop_duplicates().reset_index(drop=True)
     df = df[(df['ADR'] > 0) & (df['ADR'] < 1000)].reset_index(drop=True)
 
@@ -78,7 +82,7 @@ def load_and_preprocess_clustering():
 
 
 def load_and_preprocess_regression():
-    df = pd.read_csv('data/H2.csv')
+    df = pd.read_csv(DATA_PATH)
 
     target = 'ADR'
 

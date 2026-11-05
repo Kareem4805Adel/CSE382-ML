@@ -12,4 +12,3 @@ table = pd.DataFrame({
 })
 
 print(table)
-table.to_csv("outputs/clustering_comparison.csv", index=False)
