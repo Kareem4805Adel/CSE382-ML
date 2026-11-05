@@ -5,8 +5,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
+
 def load_and_preprocess_classification():
-    
+
     df = pd.read_csv('data/H2.csv')
     
     
@@ -43,6 +44,37 @@ def load_and_preprocess_classification():
     ])
     
     return X_train_val, X_test, y_train_val, y_test, preprocessor
+
+
+
+def load_and_preprocess_clustering():
+    df = pd.read_csv('data/H2.csv')
+    df = df.drop_duplicates().reset_index(drop=True)
+    df = df[(df['ADR'] > 0) & (df['ADR'] < 1000)].reset_index(drop=True)
+
+    numeric_cols = ['LeadTime', 'StaysInWeekendNights', 'StaysInWeekNights',
+                    'Adults', 'Children', 'Babies', 'ADR',
+                    'TotalOfSpecialRequests', 'RequiredCarParkingSpaces',
+                    'PreviousCancellations']
+    categorical_cols = ['MarketSegment', 'DistributionChannel',
+                        'CustomerType', 'DepositType', 'Meal']
+
+    df_raw = df[numeric_cols + categorical_cols].copy()
+
+    df_raw[numeric_cols] = df_raw[numeric_cols].fillna(df_raw[numeric_cols].median())
+    df_raw[categorical_cols] = df_raw[categorical_cols].fillna('Unknown')
+
+    scaler = StandardScaler()
+    X_num = scaler.fit_transform(df_raw[numeric_cols])
+    X_num = pd.DataFrame(X_num, columns=numeric_cols)
+
+
+    X_cat = pd.get_dummies(df_raw[categorical_cols], dtype=float)
+
+
+    X = pd.concat([X_num, X_cat], axis=1).values
+
+    return X, df_raw
 
 
 def load_and_preprocess_regression():
