@@ -1,28 +1,21 @@
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import cross_validate
-from src.preprocessing.preprocess import load_and_preprocess_classification
+import sys
+from src.classification.baseline import run_classification_baseline
+from src.classification.tuned_xgboost import run_tuned_xgboost
+from src.classification.tuned_logistic_regression import run_tuned_logistic_regression
 
-def run_classification_baseline():
-    X_train_val, X_test, y_train_val, y_test, preprocessor = load_and_preprocess_classification()
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please provide a command.")
+        sys.exit(1)
+        
+    command = " ".join(sys.argv[1:])
     
-  
-    baseline_rf = Pipeline(steps=[
-        ('preprocessor', preprocessor),
-        ('classifier', RandomForestClassifier(random_state=42, n_jobs=-1))
-    ])
     
-    print("Evaluating Baseline Random Forest (Cross-Validation)...")
-    cv_results = cross_validate(
-        baseline_rf, X_train_val, y_train_val, 
-        cv=5, 
-        scoring=['accuracy', 'precision', 'recall', 'f1', 'roc_auc'],
-        n_jobs=-1
-    )
-    
-    print(f"Accuracy:  {np.mean(cv_results['test_accuracy']):.4f}")
-    print(f"Precision: {np.mean(cv_results['test_precision']):.4f}")
-    print(f"Recall:    {np.mean(cv_results['test_recall']):.4f}")
-    print(f"F1-Score:  {np.mean(cv_results['test_f1']):.4f}")
-    print(f"ROC-AUC:   {np.mean(cv_results['test_roc_auc']):.4f}")
+    if "train-task classification-model baseline" in command:
+        run_classification_baseline()
+    elif "tune-task classification model xgboost" in command:
+        run_tuned_xgboost()
+    elif "tune-task classification model logistic_regression" in command:
+        run_tuned_logistic_regression()
+    else:
+        print(f"Command '{command}' not recognized.")
